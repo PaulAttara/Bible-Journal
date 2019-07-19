@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" href="/images/logo.png">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="css/styles.css">
+        <title>Bible Journal App</title>
+    </head>
+    <body>
+        <div id="main">
+            <div class="container">
+                <h1 id="title">Hey!</h1>
+                <div id="about">
+                    <h2>~Welcome to Journify~</h2>
+                    <h2 >Use this tool to journal different Bible passages!</h2>
+                    <h2>You can add multiple passages, edit, write a note and save it!</h2>
+                    <img rel="icon" src="/images/logo.png" height="100" width="100" class="center">
+                    <h2>God bless!</h2>
+                    <button id="startButton" type="button" class="btn btn-primary btn-lg">Start</button>
+                </div>
+            </div>
+            <div id="content">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xs-12"> 
+                            <input id="logTitle" spellcheck="false" type="text" class="form-control" placeholder="Entry Name">
+                        </div>
+                    </div>
+                    <!-- <b>Select Passage: </b> -->
+                </div>
+                
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xs-1"><select id="bookSelect" class="form-control" selected></select></div>
+                        <div class="col-xs-1"><select id="chapterSelect" class="form-control"></select></div>
+                        <div class="col-xs-1"><label>&nbsp; : &nbsp; </label></div>
+                        <div class="col-xs-2"><select id="verseSelect" class="form-control"></select></div>
+                        <div class="col-xs-2"></select><label>&nbsp; to &nbsp; </label></div>
+                        <div class="col-xs-2"><select id="verse2Select" class="form-control"></select></div>
+                    </div>
+                </div>
+
+                <div class="container">
+                    <button id="appendToVerse" type="button" class="btn btn-primary btn-lg">Add</button>
+                    <button id="clearVerse" type="button" class="btn btn-primary btn-lg">Clear</button>
+                    <textarea id="customText" rows="4" cols="50" class="form-control" spellcheck="false" placeholder="You can add/edit multiple passages here"></textarea>
+                    <div id="referencesDiv"><label><b>References: </b></label><br /></div>
+                    <!-- <textarea id="currentReferences" class="form-control" spellcheck="false" placeholder="Current References"></textarea> -->
+                    <label><b>Note: </b></label>
+                    <textarea id="note" class="form-control" spellcheck="false" placeholder="Write your custom journal entry here"></textarea>
+                    <button id="addToCollection" type="button" class="btn btn-primary btn-lg">Add to Collection</button>
+                    <button id="displayLogs" type="button" class="btn btn-primary btn-lg">Display All Logs</button> 
+                    <br/><label id="confirmMessage"></label>
+                    <table class="table table-bordered table-hover table-condensed" id="logsList"></table>
+                </div>
+            </div> 
+
+    </div>
+        <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="js/client.js"></script>
+    </body>
+</html>

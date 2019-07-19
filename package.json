@@ -4,13 +4,17 @@
   "description": "",
   "main": "test.js",
   "dependencies": {
+    "body-parser": "^1.19.0",
     "env-cmd": "^9.0.3",
     "express": "^4.17.1",
+    "mongodb": "^3.2.7",
+    "mongoose": "^5.6.4",
     "request": "^2.88.0"
   },
   "devDependencies": {},
   "scripts": {
-    "dev": "env-cmd --file ./config/dev.env nodemon app.js"
+    "dev": "env-cmd --file ./config/dev.env nodemon server.js",
+    "start": "concurrently \"live-server public\" \"npm run dev\""
   },
   "keywords": [],
   "author": "",
