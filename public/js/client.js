@@ -10,7 +10,7 @@ $(window).on('load', function () {
 
   // display all books
   $.ajax({
-    url: 'web/books/',
+    url: '/web/books/',
     type: 'GET',
     dataType: 'json',
     contentType: "application/json; charset=utf-8",
@@ -57,7 +57,7 @@ $('#bookSelect').on('change', function () {
       text: 'Chapter'
     }));
   $.ajax({
-    url: 'web/' + this.value,
+    url: '/web/' + this.value,
     type: 'GET',
     dataType: 'json',
     success: (data) => {
@@ -87,7 +87,7 @@ $('#chapterSelect').on('change', function () {
     text: 'Verse'
   }));
   $.ajax({
-    url: 'web/' + book + '/' + chapter,
+    url: '/web/' + book + '/' + chapter,
     type: 'GET',
     dataType: 'json',
     success: (data) => {
@@ -119,7 +119,7 @@ $('#verseSelect').on('change', function () {
       }));
 
   $.ajax({
-    url: 'web/' + book + '/' + chapter,
+    url: '/web/' + book + '/' + chapter,
     type: 'GET',
     dataType: 'json',
     success: (data) => {
@@ -156,7 +156,7 @@ $('#appendToVerse').click((e) => {
 
   }
   $.ajax({
-    url: 'web/passage/' + book + '/' + chapter + '/' + verse + '/' + verse2,
+    url: '/web/passage/' + book + '/' + chapter + '/' + verse + '/' + verse2,
     type: 'GET',
     // 'Cache-Control': 'max-age=1000',
     // contentType: "text",
@@ -194,7 +194,7 @@ $('#addToCollection').click((e) => {
 
   var myobj = { logTitle, references: referenceList, note };
   $.ajax({
-    url: 'logs/',
+    url: '/logs/',
     type: 'POST',
     data: JSON.stringify(myobj),
     contentType: "application/json"
@@ -229,7 +229,7 @@ $('#displayLogs').click((e) => {
   }
 
   $.ajax({
-    url: 'logs/',
+    url: '/logs/',
     type: 'GET',
     contentType: "application/json"
   })
