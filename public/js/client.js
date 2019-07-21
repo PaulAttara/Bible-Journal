@@ -1,11 +1,11 @@
 let referenceList = [];
 
 // on page load
-$(window).on('load', function() {
+$(window).on('load', function () {
   // Load first select
-  $('#bookSelect').append($('<option>', { 
+  $('#bookSelect').append($('<option>', {
     value: 'Book',
-    text : 'Book' 
+    text: 'Book'
   }));
 
   // display all books
@@ -13,12 +13,12 @@ $(window).on('load', function() {
     url: 'web/books/',
     type: 'GET',
     dataType: 'json',
-    contentType: "application/json; charset=utf-8", 
+    contentType: "application/json; charset=utf-8",
     success: (data) => {
       $.each(data, function (i, item) {
-        $('#bookSelect').append($('<option>', { 
+        $('#bookSelect').append($('<option>', {
           value: item.id,
-          text : item.name 
+          text: item.name
         }));
       });
     },
@@ -40,10 +40,9 @@ $('#startButton').click(async (e) => {
   window.location = '/new_entry.html';
 })
 
-   
 // once book selected, display chapters
-$('#bookSelect').on('change', function() {
-  if(!this.value){
+$('#bookSelect').on('change', function () {
+  if (!this.value) {
     return;
   }
   $('#chapterSelect').empty()
@@ -52,13 +51,13 @@ $('#bookSelect').on('change', function() {
   $('#confirmMessage').text('')
 
   $('#chapterSelect').append($(
-    '<option>', 
-    { 
-    value: 'Chapter',
-    text : 'Chapter' 
+    '<option>',
+    {
+      value: 'Chapter',
+      text: 'Chapter'
     }));
   $.ajax({
-    url: 'web/'  + this.value,
+    url: 'web/' + this.value,
     type: 'GET',
     dataType: 'json',
     success: (data) => {
@@ -66,9 +65,9 @@ $('#bookSelect').on('change', function() {
       // console.log(data);
       $.each(data, function (i, item) {
         if (item.number !== 'intro') {
-          $('#chapterSelect').append($('<option>', { 
+          $('#chapterSelect').append($('<option>', {
             value: item.number,
-            text : item.number 
+            text: item.number
           }));
         }
       });
@@ -77,62 +76,62 @@ $('#bookSelect').on('change', function() {
 });
 
 // once chapter selected, display verse
-$('#chapterSelect').on('change', function() {
+$('#chapterSelect').on('change', function () {
   var book = $('#bookSelect').find(":selected").val();
   var chapter = $('#chapterSelect').find(":selected").text();
   $('#verseSelect').empty()
   $('#verse2Select').empty()
 
-  $('#verseSelect').append($('<option>', { 
+  $('#verseSelect').append($('<option>', {
     value: 'Verse',
-    text : 'Verse' 
+    text: 'Verse'
   }));
   $.ajax({
-    url: 'web/'  + book + '/' + chapter,
+    url: 'web/' + book + '/' + chapter,
     type: 'GET',
     dataType: 'json',
     success: (data) => {
       $.each(data, function (i, item) {
         item = item.reference.split(':')[1];
         $('#verseSelect').append(
-          $('<option>', 
-          { 
-            value: item,
-            text : item 
-          }));
+          $('<option>',
+            {
+              value: item,
+              text: item
+            }));
       });
     },
   });
 });
 
 // once verse1 selected, limit verse2 options
-$('#verseSelect').on('change', function() {
+$('#verseSelect').on('change', function () {
   var book = $('#bookSelect').find(":selected").val();
   var chapter = $('#chapterSelect').find(":selected").text();
   var verse1 = $('#verseSelect').find(":selected").text();
   $('#verse2Select').empty()
 
   $('#verse2Select').append(
-    $('<option>', 
-    { 
-    value: 'Verse',
-    text : 'Verse' 
-    }));
+    $('<option>',
+      {
+        value: 'Verse',
+        text: 'Verse'
+      }));
 
   $.ajax({
-    url: 'web/'  + book + '/' + chapter,
+    url: 'web/' + book + '/' + chapter,
     type: 'GET',
     dataType: 'json',
     success: (data) => {
       $.each(data, function (i, item) {
         item = item.reference.split(':')[1];
-        if(parseInt(item) >= parseInt(verse1)){
+        if (parseInt(item) >= parseInt(verse1)) {
           $('#verse2Select').append(
-            $('<option>', 
-            { 
-            value: item,
-            text : item 
-            }));
+            $('<option>',
+              {
+                value: item,
+                text: item
+              }));
         }
       });
     },
@@ -148,13 +147,13 @@ $('#appendToVerse').click((e) => {
   var chapter = $('#chapterSelect').find(":selected").text();
   var verse = $('#verseSelect').find(":selected").val();
   var verse2 = $('#verse2Select').find(":selected").val();
-  
-  if(book == null || chapter == null || verse == null || verse2 == null){
+
+  if (book == null || chapter == null || verse == null || verse2 == null) {
     $('#confirmMessage').text('Please fill in all fields');
-     return setTimeout(() => {
+    return setTimeout(() => {
       $('#confirmMessage').text('')
-    }, 3000); 
-     
+    }, 3000);
+
   }
   $.ajax({
     url: 'web/passage/' + book + '/' + chapter + '/' + verse + '/' + verse2,
@@ -163,15 +162,15 @@ $('#appendToVerse').click((e) => {
     // contentType: "text",
     // dataType: 'application/json' 
   })
-  .done(( data ) => {
-    console.log(data)
+    .done((data) => {
+      console.log(data)
       // let verseTxt = data.content.replace(/^\s+/g, '').replace(/\s+/g, ' '); // remove only leading whitespace AND consecutive whitespaces
       // $('#customText').val(currentVal + verseTxt + ' (' + data.reference  + ')' + '\n\n');
       referenceList.push({ bookId: book, bookName: bookTxt, chapter, verses: `${verse}-${verse2}`, reference: data.reference });
       let referencesTxt = `&nbsp;<label>${data.reference}&nbsp;|</label>`;
-      $('#customText').append(data.content  + ' (' + data.reference  + ')<br/><br/>')
+      $('#customText').append(data.content + ' (' + data.reference + ')<br/><br/>')
       $('#referencesDiv').append(referencesTxt);
-   })
+    })
 })
 
 // on clear verse button click
@@ -179,12 +178,12 @@ $('#clearVerse').click((e) => {
   e.preventDefault();
   if (confirm('Are you sure you want to clear?')) {
     // $('#customText').val('');
-    $('#customText').empty ();
+    $('#customText').empty();
 
     referenceList = [];
     $('#referencesDiv').empty();
     $('#referencesDiv').append('<label><b>References: </b></label>');
-  } 
+  }
 })
 
 // on save to collection button
@@ -200,33 +199,33 @@ $('#addToCollection').click((e) => {
     data: JSON.stringify(myobj),
     contentType: "application/json"
   })
-  .done(( msg ) => {
-    $('#confirmMessage').text(msg)
-    setTimeout(() => {
-      $('#confirmMessage').text('')
-    }, 3000); 
-  })
-  .fail((xhr, status, error) => {
-    $('#confirmMessage').text(xhr.responseText)
-    setTimeout(() => {
-      $('#confirmMessage').text('')
-    }, 3000); 
-  });
-  if($('#displayLogs').text() == 'Hide Logs'){
+    .done((msg) => {
+      $('#confirmMessage').text(msg)
+      setTimeout(() => {
+        $('#confirmMessage').text('')
+      }, 3000);
+    })
+    .fail((xhr, status, error) => {
+      $('#confirmMessage').text(xhr.responseText)
+      setTimeout(() => {
+        $('#confirmMessage').text('')
+      }, 3000);
+    });
+  if ($('#displayLogs').text() == 'Hide Logs') {
     $("#displayLogs").click()
   }
 })
 
 // on show logs button
 $('#displayLogs').click((e) => {
-  e.preventDefault(); 
-  if($('#displayLogs').text() == 'Show Logs'){
+  e.preventDefault();
+  if ($('#displayLogs').text() == 'Show Logs') {
     $("#displayLogs").html('Hide Logs');
     $('#logsList').show();
-  } 
-  else{
+  }
+  else {
     $("#displayLogs").html('Show Logs');
-      $('#logsList').hide();
+    $('#logsList').hide();
   }
 
   $.ajax({
@@ -234,31 +233,30 @@ $('#displayLogs').click((e) => {
     type: 'GET',
     contentType: "application/json"
   })
-  .done(( logs ) => {
-    var logsListContent = ''
-    $("#logsList").empty();  
-    logsListContent +=
-    '<tr><th scope="col">Title</th><th style width="50%"scope="col">Note</th><th scope="col">Options</th></tr>'       
-    for(var i = 0; i < logs.length; i++)
-    {
-       logsListContent += 
-       `<tr>
+    .done((logs) => {
+      var logsListContent = ''
+      $("#logsList").empty();
+      logsListContent +=
+        '<tr><th scope="col">Title</th><th style width="50%"scope="col">Note</th><th scope="col">Options</th></tr>'
+      for (var i = 0; i < logs.length; i++) {
+        logsListContent +=
+          `<tr>
        <td>${logs[i].logTitle}</td>
        <td>${logs[i].note}</td>
        <td><button class="removeBtn" id="${logs[i]._id}">Remove</Button></td>
-       </tr>`; 
-    }
-    $("#logsList").append(logsListContent);
-  })
-  .fail((xhr, status, error) => {
+       </tr>`;
+      }
+      $("#logsList").append(logsListContent);
+    })
+    .fail((xhr, status, error) => {
       $('#confirmMessage').text(xhr.responseText)
-  });
+    });
 })
 
 // to delete an entry in table
-$("table").on('click', 'button', function() {
+$("table").on('click', 'button', function () {
   //var passage = $(this).closest("tr").find("td:eq(0)").html(); 
-  
+
   const id = this.id;
   $.ajax({
     url: 'logs/' + id,
@@ -284,7 +282,7 @@ $.ajax({
     var booksListContent = '';
     for(var i = 0; i < data.length; i++)
     {
-       booksListContent += `<a href="web/${data[i].id}" id="web/${data[i].id}">${data[i].name}</a><br/>`; 
+       booksListContent += `<a href="web/${data[i].id}" id="web/${data[i].id}">${data[i].name}</a><br/>`;
     }
     $("#booksList").append(booksListContent);
   },
