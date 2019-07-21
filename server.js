@@ -121,11 +121,11 @@ app.get('/web/:booksId/:chaptersId/:verseId', (req, res) => {
 })
 // display passage
 app.get('/web/passage/:booksId/:chaptersId/:verse1Id/:verse2Id', (req, res) => {
-    options.qs = { 'content-type': 'text' }
+    // options.qs = { 'content-type': 'text' }
     options.url = defaultURL + '/passages/' + req.params.booksId + '.' + req.params.chaptersId + '.' + req.params.verse1Id + '-' + req.params.booksId + '.' + req.params.chaptersId + '.' + req.params.verse2Id
     request(options, function (error, response, body) {
         if (error || body.data === undefined) return res.send({ error: body.error });     
-        console.log(body.data)                    
+        // console.log(body.data)                    
         res.status(200).send(body.data)
     });    
 })

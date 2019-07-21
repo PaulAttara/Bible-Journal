@@ -14,6 +14,11 @@
 .row {
   margin-left: 0px;
 }
+
+/* #bibleLogo {
+  margin-le
+} */
+
 #confirmMessage { 
   display: inline;
   font-weight: bold;
@@ -26,7 +31,7 @@
 } */
 
 #content{
-  display:none;
+  /* display:none; */
   /* background:#0D47A1; */
 }
 
@@ -34,6 +39,7 @@ table {
   display: none;
   /* margin: 10px; */
 }
+
 button {
   margin: 4px 2px 4px 0px;
 }
@@ -62,13 +68,25 @@ h2 {
 
 textarea {
   margin: 2px 1px 2px 0px;
-  padding-bottom: 600px;
-  padding-top: 400px;
+  /* padding-bottom: 800px; */
+  /* padding-top: 400px; */
+  height: 100px;
 }
 
-textarea.form-control {
-  height: 30%;
+#customText {
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #495057;
 }
+
+[contentEditable=true]:empty:before{
+  content:attr(data-text)
+}
+
 /*
 textarea{
   background: url('../images/bible.jpeg') center center no-repeat; This ruins default border
@@ -82,15 +100,18 @@ textarea{
 */
 
 
-
-select {
+select.form-control {
  /* border: 1px solid #008CBA; */
  /* font-size: 16px; */
- height: 45px;
+ height: 40px;
  /* width: 15%; */
  font-weight: bold;
- margin-top: 3px;
+  /* margin: 8px; */
+ /* margin-top: 3px;
  margin-bottom: 3px;
+ margin-right: 3px; */
+ /* display: inline-block;  */
+ /* margin-right: 10px; */
  /* padding: 2px 10px; */
  /* margin: 4px 8px 4px 0px; */
   /* background: rgba(23, 32, 161, 0.945); */

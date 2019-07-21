@@ -1,38 +1,45 @@
 let referenceList = [];
 
-
 // on page load
 $(window).on('load', function() {
-
-})
-
-// on start button click
-$('#startButton').click(async (e) => {
-  $('#about').hide();
-  // $('#title').text('Bible Journal');
-  $('#content').show();
-  e.preventDefault();
+  // Load first select
   $('#bookSelect').append($('<option>', { 
     value: 'Book',
     text : 'Book' 
   }));
+
   // display all books
   $.ajax({
     url: 'web/books/',
     type: 'GET',
-    'Cache-Control': 'max-age=1000',
     dataType: 'json',
     contentType: "application/json; charset=utf-8", 
     success: (data) => {
       $.each(data, function (i, item) {
         $('#bookSelect').append($('<option>', { 
-            value: item.id,
-            text : item.name 
+          value: item.id,
+          text : item.name 
         }));
       });
     },
   });
 })
+
+// on sign in click
+$('#signIn').click(async (e) => {
+  e.preventDefault();
+  window.location = '/';
+})
+
+// on start button click
+$('#startButton').click(async (e) => {
+  // $('#about').hide();
+  // $('#title').text('Bible Journal');
+  // $('#content').show();
+  e.preventDefault();
+  window.location = '/new_entry.html';
+})
+
    
 // once book selected, display chapters
 $('#bookSelect').on('change', function() {
@@ -158,13 +165,11 @@ $('#appendToVerse').click((e) => {
   })
   .done(( data ) => {
     console.log(data)
-      let verseTxt = data.content.replace(/^\s+/g, '').replace(/\s+/g, ' '); // remove only leading whitespace AND consecutive whitespaces
-      $('#customText').val(currentVal + verseTxt + ' (' + data.reference  + ')' + '\n\n');
+      // let verseTxt = data.content.replace(/^\s+/g, '').replace(/\s+/g, ' '); // remove only leading whitespace AND consecutive whitespaces
+      // $('#customText').val(currentVal + verseTxt + ' (' + data.reference  + ')' + '\n\n');
       referenceList.push({ bookId: book, bookName: bookTxt, chapter, verses: `${verse}-${verse2}`, reference: data.reference });
-      // var currentReferences = $('#currentReferences').val();
-      // $("#currentReferences").val(`${currentReferences}- ${jsonResp.reference}\n`);
-      let referencesTxt = `<label>${data.reference}&nbsp;|&nbsp;</label>`;
-
+      let referencesTxt = `&nbsp;<label>${data.reference}&nbsp;|</label>`;
+      $('#customText').append(data.content  + ' (' + data.reference  + ')<br/><br/>')
       $('#referencesDiv').append(referencesTxt);
    })
 })
@@ -173,8 +178,9 @@ $('#appendToVerse').click((e) => {
 $('#clearVerse').click((e) => {
   e.preventDefault();
   if (confirm('Are you sure you want to clear?')) {
-    $('#customText').val('');
-    $('#currentReferences').val('');
+    // $('#customText').val('');
+    $('#customText').empty ();
+
     referenceList = [];
     $('#referencesDiv').empty();
     $('#referencesDiv').append('<label><b>References: </b></label>');
@@ -206,16 +212,23 @@ $('#addToCollection').click((e) => {
       $('#confirmMessage').text('')
     }, 3000); 
   });
-  if($('#logsList').is(":visible")){
+  if($('#displayLogs').text() == 'Hide Logs'){
     $("#displayLogs").click()
   }
 })
 
 // on show logs button
 $('#displayLogs').click((e) => {
-  e.preventDefault();  
-  $('#logsList').show();
-  $('#displayLogs').hide();
+  e.preventDefault(); 
+  if($('#displayLogs').text() == 'Show Logs'){
+    $("#displayLogs").html('Hide Logs');
+    $('#logsList').show();
+  } 
+  else{
+    $("#displayLogs").html('Show Logs');
+      $('#logsList').hide();
+  }
+
   $.ajax({
     url: 'logs/',
     type: 'GET',
