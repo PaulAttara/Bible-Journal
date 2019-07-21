@@ -14,7 +14,7 @@
   "devDependencies": {},
   "scripts": {
     "dev": "env-cmd --file ./config/dev.env nodemon server.js",
-    "start": "concurrently \"live-server public\" \"npm run dev\""
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",

@@ -7,7 +7,7 @@ require('./mongoose')
 const app = express()
 app.use(bodyParser.json());
 const path = require('path');
-const port = process.env.PORT
+const port = process.env.PORT || 3000
 app.use(express.static('public')); //Serves resources from public folder
 
 const defaultURL = 'https://api.scripture.api.bible/v1/bibles/9879dbb7cfe39e4d-01'
