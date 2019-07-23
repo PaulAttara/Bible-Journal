@@ -413,6 +413,7 @@ const onLandingEditPage = (() => {
     type: 'GET',
     success: (log) => {
       $('#logTitle').val(log.logTitle);
+      referenceList = log.references
       const currRef = log.references.map((ref) => `${ref.bookName} ${ref.chapter}:${ref.verses} | `);
       $('#referencesDiv').html(currRef);
       $('#customText').html(log.passage);
@@ -429,6 +430,8 @@ $('#applyChanges').click((e) => {
   updatedObj.passage = $('#customText').html().trim();
   updatedObj.note = $('#note').html().trim();
   updatedObj.references = referenceList
+
+  console.log(referenceList)
 
   $.ajax({
     url: '/logs/' + currentID,
