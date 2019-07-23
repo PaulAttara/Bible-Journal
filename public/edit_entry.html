@@ -22,10 +22,10 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/">About <span class="sr-only">(current)</span></a>
                 </li>
-                <li class="nav-item active">
+                <li class="nav-item">
                     <a class="nav-link" href="/new_entry.html">Create Entry</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item active">
                     <a class="nav-link" href="/entries.html">Entries</a>
                 </li>
             </ul>
@@ -76,13 +76,14 @@
         <div class="container">
             <label><b>Passages:</b></label>
             <div id="customText" contenteditable="true" spellcheck="false" data-text="You can add/edit multiple passages here"></div>
-            <label><b>References: </b><br /></label><div id="referencesDiv"></div>
+            <label><b>References: </b></label><br/><div id="referencesDiv"></div>
             <label><b>Note: </b></label>
             <!-- <textarea id="note" class="form-control" rows="6" spellcheck="false"
                 placeholder="Write your custom journal entry here"></textarea> -->
             <div id="note" rows="6" contenteditable="true" spellcheck="false" data-text="Write your custom journal entry here"></div>
-
-            <button id="addToCollection" type="button" class="btn btn-primary btn-lg">Add to Collection</button>
+            <button id="applyChanges" type="button" class="btn btn-primary btn-lg">Apply Changes</button>
+            <button id="backToEntries" type="button" class="btn btn-primary btn-lg">Back to Entry</button>
+            <button id="deleteEntry" type="button" class="btn btn-primary btn-lg">Delete Entry</button>
             <!-- <button id="displayLogs" type="button" class="btn btn-primary btn-lg">Show Logs</button>
             <table class="table table-bordered table-hover table-condensed" id="logsList"></table> -->
         </div>

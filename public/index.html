@@ -8,10 +8,7 @@
         crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="css/styles.css">
     <title>Bible Journal App</title>
-</head>
-
-<body>
-    <nav class="navbar navbar-dark bg-primary navbar-expand-lg">
+    <nav class="navbar fixed-top navbar-dark bg-primary navbar-expand-lg">
         <a href="/"><img id="bibleLogo" rel="logo" src="/images/logo.png" height="50" width="50" class="center"></a>
         <a class="navbar-brand" href="/">Bible Journal</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -25,18 +22,27 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/new_entry.html">Create Entry</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/entries.html">Entries</a>
+                </li>
             </ul>
 
         </div>
     </nav>
+</head>
+
+<body>
     <div class="container">
         <div id="about">
             <h1 id="title">Hey!</h1>
-            <h2>~Welcome to Journify~</h2>
-            <h2>Use this tool to journal different Bible passages!</h2>
-            <h2>You can add multiple passages, edit, write a note and save it!</h2>
+            <h2>~Welcome~</h2>
+            <p id="aboutP">Use this tool to journal different Bible passages!</p>
+            <p id="aboutP">You can add multiple passages, edit, highlight, write a note and save it!</p>
             <img id="bibleLogo" rel="icon" src="/images/logo.png" height="100" width="100" class="center">
-            <h2>God bless!</h2>
+            <h2>God bless!</h2><br/>
+            <hr>
+            <h2>Verse of the day: </h2><div id="verseOfDay"></div>
             <button id="startButton" type="button" class="btn btn-primary btn-lg">Start</button>
         </div>
     </div>

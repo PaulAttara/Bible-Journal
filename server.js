@@ -32,7 +32,7 @@ app.post('/logs', async (req, res) => {
     })
     try {
         await log.save()
-        res.status(201).send('Successfully added')
+        res.status(201).send('Entry successfully added')
     } catch (e) {
         res.status(400).send(e.message)
     }
@@ -49,7 +49,45 @@ app.get('/logs', async (req, res) => {
     }
 });
 
-// delete a log
+// get a specific log by id
+app.get('/logs/:id', async (req, res) => {
+
+    const _id = req.params.id
+    
+    try{
+        const log = await JournalLogs.findOne({ _id })
+        if(!log){
+            return res.status(404).send()
+        }
+        
+        res.send(log)
+    } catch(e){
+        res.status(500).send()
+    }
+})
+
+// update a log by id
+app.patch('/logs/:id', async (req, res) => {
+    try{
+        const log = await JournalLogs.findOne({ _id: req.params.id })
+
+        if(!log){
+            return res.status(404).send()
+        }
+
+        log.logTitle = req.body.logTitle
+        log.passage = req.body.passage
+        log.note = req.body.note
+        log.references = req.body.references
+        await log.save()
+
+        res.send(log)
+    } catch (e){
+        res.status(400).send(e)
+    }
+})
+
+// delete a log by id
 app.delete('/logs/:id', async (req, res) => {
     try {
         await JournalLogs.findOneAndDelete({ _id: req.params.id })
@@ -58,14 +96,6 @@ app.delete('/logs/:id', async (req, res) => {
         res.status(400).send(e.message)
     }
 });
-
-
-
-// landing page
-app.get('/', function (req, res) {
-    res.sendFile(__dirname + '/index.html');
-});
-
 
 // display all english versions available
 app.get('/versions', (req, res) => {
@@ -79,11 +109,26 @@ app.get('/versions', (req, res) => {
 
 })
 
+// landing page
+app.get('/', function (req, res) {
+    res.sendFile(__dirname + '/index.html');
+});
+
+// verse of the day
+app.get('/web/verse-of-day/:verseID', async (req, res) => {
+    const verseID = req.params.verseID
+    options.url = defaultURL + `/search?query=${verseID}`
+    request(options, function (error, response, body) {
+        if (error || body.data === undefined) return res.status(400).send({ error: body.error });
+        res.status(200).send(body.data)
+    });    
+})
+
 // display all books
 app.get('/web/books', (req, res) => {
     options.url = defaultURL + '/books'
     request(options, function (error, response, body) {
-        if (error || body.data === undefined) return res.send({ error: body.error });
+        if (error || body.data === undefined) return res.status(400).send({ error: body.error });
         const books = body.data.map((book) => book.id + ': ' + book.name)
         res.status(200).send(body.data)
     });
@@ -124,8 +169,7 @@ app.get('/web/passage/:booksId/:chaptersId/:verse1Id/:verse2Id', (req, res) => {
     // options.qs = { 'content-type': 'text' }
     options.url = defaultURL + '/passages/' + req.params.booksId + '.' + req.params.chaptersId + '.' + req.params.verse1Id + '-' + req.params.booksId + '.' + req.params.chaptersId + '.' + req.params.verse2Id
     request(options, function (error, response, body) {
-        if (error || body.data === undefined) return res.send({ error: body.error });
-        // console.log(body.data)                    
+        if (error || body.data === undefined) return res.status(400).send({ error: body.error });
         res.status(200).send(body.data)
     });
 })

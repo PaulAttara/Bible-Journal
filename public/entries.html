@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="/images/logo.png">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <title>Bible Journal App</title>
+    <!------------------------ NAVBAR ----------------->
+    <nav class="navbar fixed-top navbar-dark bg-primary navbar-expand-lg">
+        <a href="/"><img id="bibleLogo" rel="logo" src="/images/logo.png" height="50" width="50" class="center"></a>
+        <a class="navbar-brand" href="/">Bible Journal</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">About <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/new_entry.html">Create Entry</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/entries.html">Entries</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+        <!----------------------- END NAVBAR ----------------->
+
+</head>
+
+<body>
+
+    <div id="tableDiv" class="container">
+        <h1>Entries</h1>
+        <div class="row no-pad"><table class="table table-hover table-condensed" id="logsList"></table></div>
+    </div>
+
+    <div id="specificLog" class="container">
+        <!-- <input id="logTitle" spellcheck="false" type="text" class="form-control" placeholder="Entry Name"> -->
+        <label id="logTitle" spellcheck="false" type="text"></label><br/>
+        <hr size="2">
+
+        <label id="dateLabel"></label>
+        <div id="passageText" spellcheck="false" data-text="Passage"></div>
+        <label><b>References: </b></label><br/>
+        <div id="referenceDiv"></div>
+        <label><b>Note: </b></label>
+        <!-- <textarea id="customNote" class="form-control" rows="6" spellcheck="false"
+                placeholder="Write your custom journal entry here"></textarea> -->
+        <div id="customNote" spellcheck="false" data-text="Note"></div>
+        <button id="backToEntries" type="button" class="btn btn-primary btn-lg">Back to Entries</button>
+        <button id="goToEditEntryPage" type="button" class="btn btn-primary btn-lg">Edit Entry</button>
+    </div>
+
+
+
+    <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.0/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script type="text/javascript" src="js/client.js"></script>
+</body>
+
+</html>

@@ -27,17 +27,21 @@ const passageSchema = new mongoose.Schema({
 const journalLogsSchema = new mongoose.Schema({
     logTitle: {
         type: String,
-        required: [true, 'Entry name is required']
+        required: [true, 'Enter an Entry Name']
     },
     date: {
         type: Date,
         default: Date.now,
-        required: true,
+        required: [true, 'Date is required']
+    },
+    passage: {
+        type: String
+        // required: [true, 'Add at least one passage']
     },
     references: [passageSchema],
     note: {
         type: String,
-        required: true,
+        required: [true, 'Enter a note']
     }
 }) 
 
