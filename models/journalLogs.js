@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-// const Passage = require('./Passage')
 
 const passageSchema = new mongoose.Schema({
     bookId: {
@@ -42,9 +41,14 @@ const journalLogsSchema = new mongoose.Schema({
     note: {
         type: String,
         required: [true, 'Enter a note']
-    }
+    },
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'User'
+    } 
 }) 
 
-const JournalLogs = mongoose.model('JournalLogs', journalLogsSchema)  
+const JournalLog = mongoose.model('JournalLog', journalLogsSchema)  
 
-module.exports = JournalLogs
+module.exports = JournalLog

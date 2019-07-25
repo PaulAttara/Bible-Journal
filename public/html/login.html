@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="google-signin-client_id" content="56717737385-c7o2o1q38jdli4q9mqoh4rn8krfoqel7.apps.googleusercontent.com">
+    <link rel="icon" href="/images/logo.png">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+        crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="css/login.css">
+    <title>Bible Journal App</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-9 col-md-7 col-lg-5 mx-auto ">
+                <div class="card card-signin my-5" style="height: 90%;">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Welcome to Bible Journal</h5>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <h5 class="card-title text-center">Sign In</h5>
+                        <br/>
+                        <br/>
+                        <div class="g-signin2" data-onsuccess="onSignIn" data-theme="light" data-width="300" data-height="50" data-longtitle="true"></div>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <img id="bibleLogo" rel="logo" src="/images/logo.png" height="200" width="200" class="mx-auto d-block">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
+    <script type="text/javascript" src="js/client.js"></script>
+</body>

@@ -1,21 +1,33 @@
 let referenceList = [];
 let currentID = '';
+let oldTextBeforeHighlight = ''
 
 // on any page load
 $(window).on('load', function () {
 
-  // on about page load
+  // on login page load
   if (top.location.pathname === '/') {
+
+  }
+  // on home page load
+  if (top.location.pathname === '/home') {
     getVerseOfDay();
+    // console.log(nameUser)
+    // $('#title').html('<h2>Hey ' + nameUser + '</h2>')
   }
 
   // on new entries page load
-  if (top.location.pathname === '/new_entry.html') {
+  if (top.location.pathname === '/new_entry') {
     loadBooks();
+    // force page to scroll to cursor when type in note
+    document.getElementById("note").addEventListener("input", function() {
+      $('#note').focus();
+      $.event.trigger({ type : 'keypress' }); // works cross-browser
+    }, false);
   }
 
   // on entries page load
-  if (top.location.pathname === '/entries.html') {
+  if (top.location.pathname === '/entries') {
     if(localStorage.getItem('ID')){
       currentID = localStorage.getItem('ID')
       return loadSpecificEntry();
@@ -24,22 +36,88 @@ $(window).on('load', function () {
   }
 
   // on edit entries page load
-  if (top.location.pathname === '/edit_entry.html') {
+  if (top.location.pathname === '/edit_entry') {
     currentID = localStorage.getItem('ID')
     onLandingEditPage();
   }
+
 })
 
-// on sign in click
+
+// on testing sign in click
 $('#signIn').click(async (e) => {
   e.preventDefault();
-  window.location = '/';
+  
+  window.location = '/home';
 })
+
+
+function onSignIn(googleUser) {
+  console.log('entered client sign in function')
+  // var profile = googleUser.getBasicProfile();
+  // console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead. // use this to identify user
+  // console.log('Image URL: ' + profile.getImageUrl());
+  auth2 = gapi.auth2.init();
+
+  // if (auth2.isSignedIn.get()) {
+    // var profile = auth2.currentUser.get().getBasicProfile();
+    // console.log('ID: ' + profile.getId());
+  // }
+
+  var id_token = googleUser.getAuthResponse().id_token;
+  localStorage.setItem('token', id_token);
+  // nameUser = googleUser.getBasicProfile().getGivenName()
+
+  const tokenObj = {
+    TOKEN_ID: id_token
+  }
+
+  $.ajax({
+    url: '/signin/',
+    type: 'POST',
+    data: JSON.stringify(tokenObj),
+    contentType: "application/json",
+    success: (data) => {
+      localStorage.setItem('token', data.token);
+      window.location = '/home'
+    },
+  });
+}
+
+function onLoad() {
+  gapi.load('auth2', function() {
+    gapi.auth2.init();
+  });
+}
+
+function signOut() {
+  try{
+  var auth2 = gapi.auth2.getAuthInstance();
+  auth2.signOut().then(function () {
+    console.log('User signed out.');
+  });
+  }
+  catch(e){
+    onLoad()
+  }
+  $.ajax({
+    url: '/signout/',
+    type: 'POST',
+    contentType: "application/json",
+    success: (data) => {
+      console.log(data)
+      localStorage.clear()
+      console.log('User signed out.');
+      window.location = '/'
+    },
+  });
+
+}
 
 // on start button click
 $('#startButton').click(async (e) => {
   e.preventDefault();
-  window.location = '/new_entry.html';
+  window.location = '/new_entry';
 })
 
 const getVerseOfDay = (() => {
@@ -221,16 +299,8 @@ $('#appendToVerse').click((e) => {
 
   if (book == null || chapter == null || verse == null || verse2 == null) {
     const msg = 'Please select book, chapter and verses'
-    const alertMsg = '<div id="successAlert" class="alert alert-warning alert-dismissible fade show" role="alert">' +
-        `<strong>Error! </strong> ${msg}` +
-        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-        '<span aria-hidden="true">&times;</span>' +
-        '</button></div>'
-      $('#main').append(alertMsg)
+    showAlertMsg(msg, 'Error')
 
-      $(".alert").delay(3000).slideUp(200, function () {
-        $(this).alert('close');
-      });
   }
   $.ajax({
     url: '/web/passage/' + book + '/' + chapter + '/' + verse + '/' + verse2,
@@ -262,8 +332,9 @@ $('#addToCollection').click((e) => {
   var note = $("#note").html().trim();
   const passageDiv = $('#customText').html().trim();
 
-
   var myobj = { logTitle, references: referenceList, passage: passageDiv, note };
+  myobj.token = localStorage.getItem('token')
+
   $.ajax({
     url: '/logs/',
     type: 'POST',
@@ -271,37 +342,25 @@ $('#addToCollection').click((e) => {
     contentType: "application/json"
   })
     .done((msg) => {
-
-      const alertMsg = '<div id="successAlert" class="alert alert-warning alert-dismissible fade show" role="alert">' +
-        `<strong>Success! </strong> ${msg}` +
-        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-        '<span aria-hidden="true">&times;</span>' +
-        '</button></div>'
-      $('#main').append(alertMsg)
-
-      $(".alert").delay(3000).slideUp(200, function () {
-        $(this).alert('close');
-      });
+      showAlertMsg(msg, 'Success')
     })
     .fail((xhr, status, error) => {
-      const alertMsg = '<div id="successAlert" class="alert alert-warning alert-dismissible fade show" role="alert">' +
-        `<strong>Error! </strong>${xhr.responseText}` +
-        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-        '<span aria-hidden="true">&times;</span>' +
-        '</button></div>'
-      $('#main').append(alertMsg)
+      showAlertMsg(xhr.responseText, 'Errror')
 
-      $(".alert").delay(3000).slideUp(200, function () {
-        $(this).alert('close');
-      });
     });
 })
 
 // on show logs button
 const displayLogs = (() => {
+  const token = localStorage.getItem('token')
+ 
+  console.log('test')
+
   $.ajax({
     url: '/logs/',
     type: 'GET',
+    // data: ataObj,
+    beforeSend: function(xhr){xhr.setRequestHeader('token', token);},
     contentType: "application/json"
   })
     .done((logs) => {
@@ -332,43 +391,57 @@ const displayLogs = (() => {
 $('#highlightSelected').on('click', () => {
 
   try {
+    // console.log(window.getSelection().anchorNode)
+    // if ($(window.getSelection().anchorNode).attr('id') === '') { console.log('NOTHING SELECTED') }
+
+
+    const colorHexCode = $('#colorSelect').find('option:selected').attr('id');
+    // console.log('before:', $('#note').html());
+
+    oldTextBeforeHighlight = $('#customText').html();
     var selection = window.getSelection();
+    // console.log(selection)
     var range = selection.getRangeAt(0);
+    // console.log(range)
+    // const div = document.createElement("div")
+    // range.insertNode(div);
     var newNode = document.createElement("span");
-    newNode.setAttribute("style", "background-color: pink;");
+    newNode.setAttribute("style", "background-color: " + colorHexCode + ';');
     range.surroundContents(newNode);
+
+
+    // $('#note').append('<')
+    // console.log('after:', $('#note').html());
+
+    // clear cursor selection once text successfully highlighted
     if (window.getSelection) { window.getSelection().removeAllRanges(); }
     else if (document.selection) { document.selection.empty(); }
   } catch (e) {
-    const msg = ' Only one section can be highlighted at a time'
-    const alertMsg = '<div id="successAlert" class="alert alert-warning alert-dismissible fade show" role="alert">' +
-      `<strong>Error! </strong> ${msg}` +
-      '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-      '<span aria-hidden="true">&times;</span>' +
-      '</button></div>'
-    $('#main').append(alertMsg)
-
-    $(".alert").delay(3000).slideUp(200, function () {
-      $(this).alert('close');
-    });
+    const msg = ' Only one verse can be highlighted at a time'
+    showAlertMsg(msg, 'Error')
   }
 });
 
-
+$('#undoHighlight').on('click', () => {
+  $('#customText').html(oldTextBeforeHighlight);
+})
 
 // on view entry cell click in table
 $("table").on('click', 'button', function () {
-  //var passage = $(this).closest("tr").find("td:eq(0)").html(); 
-
   currentID = this.id;
   localStorage.setItem('ID', currentID);
   loadSpecificEntry();
 })
 
 const loadSpecificEntry = (() => {
+
+  const token = localStorage.getItem('token')
+
   $.ajax({
     url: '/logs/' + currentID,
     type: 'GET',
+    beforeSend: function(xhr){xhr.setRequestHeader('token', token);},
+
     success: (log) => {
       $('#tableDiv').hide();
       $('#logTitle').text(log.logTitle);
@@ -387,11 +460,11 @@ const loadSpecificEntry = (() => {
 // on back to entries click
 $('#backToEntries').click((e) => {
   e.preventDefault();
-  if (top.location.pathname === '/edit_entry.html') {
-    window.location = '/entries.html';
+  if (top.location.pathname === '/edit_entry') {
+    window.location = '/entries';
   }
-  if (top.location.pathname === '/entries.html') {
-    localStorage.clear();
+  if (top.location.pathname === '/entries') {
+    localStorage.removeItem('ID');
   }
   $('#tableDiv').show();
   displayLogs();
@@ -402,15 +475,17 @@ $('#backToEntries').click((e) => {
 // on go to entry edit page click
 $('#goToEditEntryPage').click((e) => {
   e.preventDefault();
-  window.location = '/edit_entry.html';
+  window.location = '/edit_entry';
 })
 
 // on landing edit entry page
 const onLandingEditPage = (() => {
   loadBooks();
+  const token = localStorage.getItem('token')
   $.ajax({
     url: '/logs/' + currentID,
     type: 'GET',
+    beforeSend: function(xhr){xhr.setRequestHeader('token', token);},
     success: (log) => {
       $('#logTitle').val(log.logTitle);
       referenceList = log.references
@@ -425,14 +500,17 @@ const onLandingEditPage = (() => {
 // on apply changes entry click
 $('#applyChanges').click((e) => {
   e.preventDefault();
-  let updatedObj = {}
+  let updatedObj = {}  
+  const token = localStorage.getItem('token');
+
   updatedObj.logTitle = $('#logTitle').val().trim();
   updatedObj.passage = $('#customText').html().trim();
   updatedObj.note = $('#note').html().trim();
   updatedObj.references = referenceList
+  updatedObj.token = token
 
   console.log(referenceList)
-
+  
   $.ajax({
     url: '/logs/' + currentID,
     type: 'PATCH',
@@ -440,16 +518,7 @@ $('#applyChanges').click((e) => {
     data: JSON.stringify(updatedObj),
     success: (log) => {
       const msg = 'Entry Successfully Updated'
-      const alertMsg = '<div id="successAlert" class="alert alert-warning alert-dismissible fade show" role="alert">' +
-          `<strong>Success! </strong> ${msg}` +
-          '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-          '<span aria-hidden="true">&times;</span>' +
-          '</button></div>'
-        $('#main').append(alertMsg)
-  
-        $(".alert").delay(3000).slideUp(200, function () {
-          $(this).alert('close');
-        });
+      showAlertMsg(msg, 'Success')
     }
   });
 })
@@ -457,16 +526,39 @@ $('#applyChanges').click((e) => {
 // on delete entry click
 $('#deleteEntry').click((e) => {
   e.preventDefault();
+  const token = localStorage.getItem('token')
 
   if (confirm('Are you sure you want to delete this entry?')) {
     $.ajax({
       url: '/logs/' + currentID,
       type: 'DELETE',
+      beforeSend: function(xhr){xhr.setRequestHeader('token', token);},
       contentType: "application/json",
       success: (msg) => {
-        window.location = '/entries.html';
-        localStorage.clear();
+        window.location = '/entries';
+        localStorage.removeItem('ID');
       }
     });
   }
 })
+
+// redirect to home
+$('#goHome').click((e) => {
+  e.preventDefault();
+  window.location = '/home'
+})
+
+const showAlertMsg = ((msg, type) => {
+
+    const alertMsg = '<div id="successAlert" class="alert alert-warning alert-dismissible fade show" role="alert">' +
+      `<strong>${type}! </strong> ${msg}` +
+      '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+      '<span aria-hidden="true">&times;</span>' +
+      '</button></div>'
+    $('#main').append(alertMsg)
+
+    $(".alert").delay(3000).slideUp(200, function () {
+      $(this).alert('close');
+    });
+
+  })

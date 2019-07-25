@@ -50,6 +50,15 @@ img {
     height: auto;
     border-radius: 2rem;
   }
+
+  .g-signin2{
+    width: 100%;
+  }
+  
+  .g-signin2 > div{
+    margin: 0 auto;
+  }
+  
   
   .form-label-group>input,
   .form-label-group>label {
