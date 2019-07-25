@@ -20,7 +20,13 @@ const port = process.env.PORT || 3000
 
 app.use(express.static('public')); 
 
-
+function nocache(req, res, next) {
+    console.log()
+    res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+    res.header('Expires', '-1');
+    res.header('Pragma', 'no-cache');
+    next();
+  }
 
 app.listen(port, () => {
     console.log('Server is up on port ' + port)
@@ -32,19 +38,19 @@ app.get('/', function (req, res) {
     res.sendFile(path.resolve('public', 'html', 'login.html'))
 });
 
-app.get('/home', auth, function (req, res) {
+app.get('/home', nocache, auth, function (req, res) {
     res.sendFile(path.resolve('public', 'html', 'home.html'))
 });
 
-app.get('/entries', auth, function (req, res) {
+app.get('/entries', nocache, auth, function (req, res) {
     res.sendFile(path.resolve('public', 'html', 'entries.html'))
 });
 
-app.get('/new_entry', auth, function (req, res) {
+app.get('/new_entry', nocache, auth, function (req, res) {
     res.sendFile(path.resolve('public', 'html', 'new_entry.html'))
 });
 
-app.get('/edit_entry', auth, function (req, res) {
+app.get('/edit_entry', nocache, auth, function (req, res) {
     res.sendFile(path.resolve('public', 'html', 'edit_entry.html'))
 });
 

@@ -519,6 +519,7 @@ $('#applyChanges').click((e) => {
     success: (log) => {
       const msg = 'Entry Successfully Updated'
       showAlertMsg(msg, 'Success')
+      window.location = '/entries';
     }
   });
 })
