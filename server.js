@@ -4,6 +4,7 @@ const bodyParser = require('body-parser')
 const journalLogRouter = require('./routers/journalLog')
 const userRouter = require('./routers/user')
 const auth = require('./middleware/auth')
+const nocache = require('./middleware/nocache')
 
 require('./mongoose')
 
@@ -20,13 +21,6 @@ const port = process.env.PORT || 3000
 
 app.use(express.static('public')); 
 
-function nocache(req, res, next) {
-    console.log()
-    res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
-    res.header('Expires', '-1');
-    res.header('Pragma', 'no-cache');
-    next();
-  }
 
 app.listen(port, () => {
     console.log('Server is up on port ' + port)
@@ -54,11 +48,10 @@ app.get('/edit_entry', nocache, auth, function (req, res) {
     res.sendFile(path.resolve('public', 'html', 'edit_entry.html'))
 });
 
+// handle any errors thrown in middleware authentication
 app.use(function(err,req,res,next) {
-    res.sendFile(path.resolve('public', 'html', 'login.html'))
     res.redirect('/');
   });
-
 
 // handle any other request
 app.get('*', (req, res) => {
