@@ -22,6 +22,10 @@
   height: 48px;
 }
 
+#searchBox {
+  padding: 19px;
+}
+
 #specificLog {
     display: none;
 }

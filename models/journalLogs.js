@@ -26,7 +26,8 @@ const passageSchema = new mongoose.Schema({
 const journalLogsSchema = new mongoose.Schema({
     logTitle: {
         type: String,
-        required: [true, 'Enter an Entry Name']
+        required: [true, 'Enter an Entry Name'],
+        trim: true
     },
     date: {
         type: Date,

@@ -52,7 +52,15 @@
             <label><b>Select Passage: </b><br /></label>
 
             <div class="row">
-                <div class="col-xs-6"><select id="bookSelect" class="form-control" selected></select></div>
+                <div class="col-xs-6">
+                    <select id="bookSelect" class="form-control" selected></select>
+
+                    <!-- <input list="bookSelect" name="bookName" id="bookSelects" class="form-control" placeholder="Book">
+                    <datalist id="bookSelect">
+                        <option value="Something"></option>
+                    </datalist> -->
+            
+                </div>
                 <div class="col-xs-6"><select id="chapterSelect" class="form-control"></select></div>
                 <div class="col-xs-1"><label>&nbsp; : &nbsp; </label></div>
                 <div class="row visible-sm">
@@ -89,16 +97,15 @@
                             <option id="#80FF33">Green</option>
                             <option id="orange">Orange</option>
                             <option id="#007bff">Blue</option>
-                            <option id="transparent">None</option>
                         </select>
                     </div>
                     <div class="col-xs-4">
                         <button id="highlightSelected" type="button" class="btn btn-primary btn-lg">Highlight</button>
                     </div>
     
-                    <div class="col-xs-4">
+                    <!-- <div class="col-xs-4">
                         <button id="undoHighlight" type="button" class="btn btn-primary btn-lg">Undo</button>
-                    </div>
+                    </div> -->
                 </div>
 
             <label><b>Note: </b></label>

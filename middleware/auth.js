@@ -24,7 +24,6 @@ const auth = async (req, res, next) => {
     
     const client = new OAuth2Client(CLIENT_ID);
 
-
     if(!token){ // no token received, so user is not signed in
         console.log('no user signed in')
         // throw new Error('no user signed in')
@@ -44,17 +43,17 @@ const auth = async (req, res, next) => {
             if(!returnedUser){
                 console.log('You need to create an account!')
                 return next(new Error('Please Authenticate'))
-
             }
             req.user = returnedUser
             req.token = token
-            next()
+            return next()
 
         } catch (e) {
             return next(new Error('Please Authenticate'))
         }
       }
       verify().catch(console.error);
+    //   return next(new Error('Please Authenticate'))
 }
 
 module.exports = auth

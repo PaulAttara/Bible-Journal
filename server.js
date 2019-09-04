@@ -3,9 +3,9 @@ const bibleapi = require('./bible-api')
 const bodyParser = require('body-parser')
 const journalLogRouter = require('./routers/journalLog')
 const userRouter = require('./routers/user')
-const auth = require('./middleware/auth')
+const https = require('./middleware/https')
 const nocache = require('./middleware/nocache')
-
+const auth = require('./middleware/auth')
 require('./mongoose')
 
 const app = express()
@@ -13,38 +13,32 @@ app.use(bodyParser.json());
 app.use(journalLogRouter)
 app.use(userRouter)
 app.use(bibleapi)
-
-const path = require('path');
-
-
-const port = process.env.PORT || 3000
-
 app.use(express.static('public')); 
 
+const path = require('path');
+const port = process.env.PORT || 3000
 
 app.listen(port, () => {
     console.log('Server is up on port ' + port)
 })
 
-// landing page
-
-app.get('/', function (req, res) {
+app.get('/', https, function (req, res) {
     res.sendFile(path.resolve('public', 'html', 'login.html'))
 });
 
-app.get('/home', nocache, auth, function (req, res) {
+app.get('/home', https, nocache, auth, function (req, res) {
     res.sendFile(path.resolve('public', 'html', 'home.html'))
 });
 
-app.get('/entries', nocache, auth, function (req, res) {
+app.get('/entries', https, nocache, auth, function (req, res) {
     res.sendFile(path.resolve('public', 'html', 'entries.html'))
 });
 
-app.get('/new_entry', nocache, auth, function (req, res) {
+app.get('/new_entry', https, nocache, auth, function (req, res) {
     res.sendFile(path.resolve('public', 'html', 'new_entry.html'))
 });
 
-app.get('/edit_entry', nocache, auth, function (req, res) {
+app.get('/edit_entry', https, nocache, auth, function (req, res) {
     res.sendFile(path.resolve('public', 'html', 'edit_entry.html'))
 });
 

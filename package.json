@@ -15,7 +15,7 @@
   "devDependencies": {},
   "scripts": {
     "dev": "env-cmd --file ./config/dev.env nodemon server.js",
-    "start": "node server.js"
+    "start": "NODE_ENV=production node server.js"
   },
   "keywords": [],
   "author": "",

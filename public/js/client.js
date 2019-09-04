@@ -1,6 +1,7 @@
 let referenceList = [];
 let currentID = '';
 let oldTextBeforeHighlight = ''
+var nameUser
 
 // on any page load
 $(window).on('load', function () {
@@ -11,9 +12,14 @@ $(window).on('load', function () {
   }
   // on home page load
   if (top.location.pathname === '/home') {
+    // auth2 = gapi.auth2.init();
+    console.log(nameUser) 
+    let name = gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile()
     getVerseOfDay();
+
     // console.log(nameUser)
-    // $('#title').html('<h2>Hey ' + nameUser + '</h2>')
+    $('#title').html('<h2>Hey ' + name + '</h2>')
+    $('#title2').append('<h2>Hey ' + name + '</h2>')
   }
 
   // on new entries page load
@@ -28,10 +34,10 @@ $(window).on('load', function () {
 
   // on entries page load
   if (top.location.pathname === '/entries') {
-    if(localStorage.getItem('ID')){
-      currentID = localStorage.getItem('ID')
-      return loadSpecificEntry();
-    }
+    // if(localStorage.getItem('ID')){
+    //   currentID = localStorage.getItem('ID')
+    //   return loadSpecificEntry();
+    // }
     displayLogs();
   }
 
@@ -66,7 +72,8 @@ function onSignIn(googleUser) {
 
   var id_token = googleUser.getAuthResponse().id_token;
   localStorage.setItem('token', id_token);
-  // nameUser = googleUser.getBasicProfile().getGivenName()
+  nameUser = googleUser.getBasicProfile().getGivenName()
+  console.log(nameUser)
 
   const tokenObj = {
     TOKEN_ID: id_token
@@ -169,6 +176,10 @@ const getVerseOfDay = (() => {
 })
 
 const loadBooks = (() => {
+  $('#bookSelect').empty()
+  $('#chapterSelect').empty()
+  $('#verseSelect').empty()
+  $('#verse2Select').empty()
   // Load first select
   $('#bookSelect').append($('<option>', {
     value: 'Book',
@@ -192,7 +203,52 @@ const loadBooks = (() => {
   });
 })
 
-// once book selected, display chapters
+// $('input[name=bookName]').focusin(function() { // ATTEMPT
+//   $('input[name=bookName]').val('');
+//   $('#chapterSelect').empty()
+//   $('#verseSelect').empty()
+//   $('#verse2Select').empty()
+//   const test = $('#bookSelects').text()
+//   console.log(test)
+
+//   $('#chapterSelect').append($(
+//     '<option>',
+//     {
+//       value: 'Chapter',
+//       text: 'Chapter'
+//     }));
+//   $.ajax({
+//     url: '/web/' +  $('input[name=bookName]').val(),
+//     type: 'GET',
+//     dataType: 'json',
+//     success: (data) => {
+//       // remove intro chapter
+//       $.each(data, function (i, item) {
+//         if (item.number !== 'intro') {
+//           $('#chapterSelect').append($('<option>', {
+//             value: item.number,
+//             text: item.number
+//           }));
+//         }
+//       });
+//     },
+//   });
+// });
+
+
+
+// once book selected, display chapters // ATTEMPT
+// $("#bookSelect").on('input', function () {
+//   var val = this.value;
+//   if($('#allNames option').filter(function(){
+//       return this.value.toUpperCase() === val.toUpperCase();        
+//   }).length) {
+//       //send ajax request
+//       alert(this.value);
+//   }
+// });
+
+// once book selected, display chapters 
 $('#bookSelect').on('change', function () {
   if (!this.value) {
     return;
@@ -297,11 +353,11 @@ $('#appendToVerse').click((e) => {
   var verse = $('#verseSelect').find(":selected").val();
   var verse2 = $('#verse2Select').find(":selected").val();
 
-  if (book == null || chapter == null || verse == null || verse2 == null) {
+  if (book == null || chapter == null || verse == null || verse2 === 'Verse' || verse === 'Verse') {
     const msg = 'Please select book, chapter and verses'
-    showAlertMsg(msg, 'Error')
-
+    return showAlertMsg(msg, 'Error')
   }
+
   $.ajax({
     url: '/web/passage/' + book + '/' + chapter + '/' + verse + '/' + verse2,
     type: 'GET',
@@ -311,6 +367,7 @@ $('#appendToVerse').click((e) => {
       let referencesTxt = `&nbsp;<label>${data.reference}&nbsp;|</label>`;
       $('#customText').append(data.content + ' (' + data.reference + ')<br/><br/>')
       $('#referencesDiv').append(referencesTxt);
+      loadBooks()
     })
 })
 
@@ -343,10 +400,11 @@ $('#addToCollection').click((e) => {
   })
     .done((msg) => {
       showAlertMsg(msg, 'Success')
+      window.location = '/entries'
     })
     .fail((xhr, status, error) => {
-      showAlertMsg(xhr.responseText, 'Errror')
-
+      // showAlertMsg(xhr.responseText, 'Error')
+      return showAlertMsg('Please enter a title, add passage, and a note', 'Error')
     });
 })
 
@@ -372,7 +430,21 @@ const displayLogs = (() => {
          <th scope="col">Date</th></tr>`
 
       for (var i = 0; i < logs.length; i++) {
-        const currRef = logs[i].references.map((ref) => `${ref.bookId} ${ref.chapter}:${ref.verses}`);
+        const currRef = logs[i].references.map((ref) => {
+          if(ref.verses){
+            let verseArr = ref.verses.split('-');
+            if(verseArr[0] === verseArr[1]){
+              let verseArr2 = `${ref.bookId} ${ref.chapter}:${ref.verses}`.split('-')
+              return verseArr2[0]
+            }
+            else{
+              return `${ref.bookId} ${ref.chapter}:${ref.verses}`
+            }
+          }
+          
+        });
+        
+        console.log(logs[i].references)
         const newCurrRef = currRef.toString().replace(/\,/g, '<br/>')
         const dateTxt = moment(logs[i].date.substring(0, 10)).format('dddd MMMM D Y')
         logsListContent +=
@@ -418,13 +490,9 @@ $('#highlightSelected').on('click', () => {
     else if (document.selection) { document.selection.empty(); }
   } catch (e) {
     const msg = ' Only one verse can be highlighted at a time'
-    showAlertMsg(msg, 'Error')
+    return (msg, 'Error')
   }
 });
-
-$('#undoHighlight').on('click', () => {
-  $('#customText').html(oldTextBeforeHighlight);
-})
 
 // on view entry cell click in table
 $("table").on('click', 'button', function () {
@@ -434,9 +502,7 @@ $("table").on('click', 'button', function () {
 })
 
 const loadSpecificEntry = (() => {
-
   const token = localStorage.getItem('token')
-
   $.ajax({
     url: '/logs/' + currentID,
     type: 'GET',
@@ -543,14 +609,20 @@ $('#deleteEntry').click((e) => {
   }
 })
 
+$('#searchBox').keypress(function() {
+  console.log($('#searchBox').val());
+  const filter = $('#searchSelect').find(":selected").val();
+
+});
+
 // redirect to home
 $('#goHome').click((e) => {
   e.preventDefault();
   window.location = '/home'
 })
 
+// method to show alert box
 const showAlertMsg = ((msg, type) => {
-
     const alertMsg = '<div id="successAlert" class="alert alert-warning alert-dismissible fade show" role="alert">' +
       `<strong>${type}! </strong> ${msg}` +
       '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
@@ -562,4 +634,4 @@ const showAlertMsg = ((msg, type) => {
       $(this).alert('close');
     });
 
-  })
+})
