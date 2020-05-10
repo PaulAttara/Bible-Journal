@@ -13,7 +13,7 @@ $(window).on('load', function () {
   // on home page load
   if (top.location.pathname === '/home') {
     // auth2 = gapi.auth2.init();
-    console.log(nameUser) 
+    console.log(nameUser)
     let name = gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile()
     getVerseOfDay();
 
@@ -26,9 +26,13 @@ $(window).on('load', function () {
   if (top.location.pathname === '/new_entry') {
     loadBooks();
     // force page to scroll to cursor when type in note
-    document.getElementById("note").addEventListener("input", function() {
+    document.getElementById("note").addEventListener("input", function () {
       $('#note').focus();
-      $.event.trigger({ type : 'keypress' }); // works cross-browser
+      $.event.trigger({ type: 'keypress' }); // works cross-browser
+    }, false);
+    document.getElementById("prayer").addEventListener("input", function () {
+      $('#prayer').focus();
+      $.event.trigger({ type: 'keypress' }); // works cross-browser
     }, false);
   }
 
@@ -49,11 +53,10 @@ $(window).on('load', function () {
 
 })
 
-
 // on testing sign in click
 $('#signIn').click(async (e) => {
   e.preventDefault();
-  
+
   window.location = '/home';
 })
 
@@ -66,8 +69,8 @@ function onSignIn(googleUser) {
   auth2 = gapi.auth2.init();
 
   // if (auth2.isSignedIn.get()) {
-    // var profile = auth2.currentUser.get().getBasicProfile();
-    // console.log('ID: ' + profile.getId());
+  // var profile = auth2.currentUser.get().getBasicProfile();
+  // console.log('ID: ' + profile.getId());
   // }
 
   var id_token = googleUser.getAuthResponse().id_token;
@@ -92,19 +95,19 @@ function onSignIn(googleUser) {
 }
 
 function onLoad() {
-  gapi.load('auth2', function() {
+  gapi.load('auth2', function () {
     gapi.auth2.init();
   });
 }
 
 function signOut() {
-  try{
-  var auth2 = gapi.auth2.getAuthInstance();
-  auth2.signOut().then(function () {
-    console.log('User signed out.');
-  });
+  try {
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function () {
+      console.log('User signed out.');
+    });
   }
-  catch(e){
+  catch (e) {
     onLoad()
   }
   $.ajax({
@@ -170,7 +173,7 @@ const getVerseOfDay = (() => {
     dataType: 'json',
     contentType: "application/json; charset=utf-8",
     success: (data) => {
-      $('#verseOfDay').html(data.passages[0].content +  ` ${data.passages[0].reference}`);
+      $('#verseOfDay').html(data.passages[0].content + ` ${data.passages[0].reference}`);
     },
   });
 })
@@ -386,10 +389,11 @@ $('#clearVerse').click((e) => {
 $('#addToCollection').click((e) => {
   e.preventDefault();
   let logTitle = $('#logTitle').val().trim();
-  var note = $("#note").html().trim();
   const passageDiv = $('#customText').html().trim();
+  var note = $("#note").html().trim();
+  var prayer = $("#prayer").html().trim();
 
-  var myobj = { logTitle, references: referenceList, passage: passageDiv, note };
+  var myobj = { logTitle, references: referenceList, passage: passageDiv, note, prayer };
   myobj.token = localStorage.getItem('token')
 
   $.ajax({
@@ -404,21 +408,21 @@ $('#addToCollection').click((e) => {
     })
     .fail((xhr, status, error) => {
       // showAlertMsg(xhr.responseText, 'Error')
-      return showAlertMsg('Please enter a title, add passage, and a note', 'Error')
+      return showAlertMsg('Please enter a title, a passage, and a note', 'Error')
     });
 })
 
 // on show logs button
 const displayLogs = (() => {
   const token = localStorage.getItem('token')
- 
+
   console.log('test')
 
   $.ajax({
     url: '/logs/',
     type: 'GET',
     // data: ataObj,
-    beforeSend: function(xhr){xhr.setRequestHeader('token', token);},
+    beforeSend: function (xhr) { xhr.setRequestHeader('token', token); },
     contentType: "application/json"
   })
     .done((logs) => {
@@ -431,19 +435,19 @@ const displayLogs = (() => {
 
       for (var i = 0; i < logs.length; i++) {
         const currRef = logs[i].references.map((ref) => {
-          if(ref.verses){
+          if (ref.verses) {
             let verseArr = ref.verses.split('-');
-            if(verseArr[0] === verseArr[1]){
+            if (verseArr[0] === verseArr[1]) {
               let verseArr2 = `${ref.bookId} ${ref.chapter}:${ref.verses}`.split('-')
               return verseArr2[0]
             }
-            else{
+            else {
               return `${ref.bookId} ${ref.chapter}:${ref.verses}`
             }
           }
-          
+
         });
-        
+
         console.log(logs[i].references)
         const newCurrRef = currRef.toString().replace(/\,/g, '<br/>')
         const dateTxt = moment(logs[i].date.substring(0, 10)).format('dddd MMMM D Y')
@@ -506,7 +510,7 @@ const loadSpecificEntry = (() => {
   $.ajax({
     url: '/logs/' + currentID,
     type: 'GET',
-    beforeSend: function(xhr){xhr.setRequestHeader('token', token);},
+    beforeSend: function (xhr) { xhr.setRequestHeader('token', token); },
 
     success: (log) => {
       $('#tableDiv').hide();
@@ -517,6 +521,7 @@ const loadSpecificEntry = (() => {
       $('#referenceDiv').html(currRef);
       $('#passageText').html(log.passage);
       $('#customNote').html(log.note)
+      $('#customPrayer').html(log.prayer)
       window.scrollTo(0, 0);
       $('#specificLog').show();
     }
@@ -551,7 +556,7 @@ const onLandingEditPage = (() => {
   $.ajax({
     url: '/logs/' + currentID,
     type: 'GET',
-    beforeSend: function(xhr){xhr.setRequestHeader('token', token);},
+    beforeSend: function (xhr) { xhr.setRequestHeader('token', token); },
     success: (log) => {
       $('#logTitle').val(log.logTitle);
       referenceList = log.references
@@ -559,6 +564,7 @@ const onLandingEditPage = (() => {
       $('#referencesDiv').html(currRef);
       $('#customText').html(log.passage);
       $('#note').html(log.note)
+      $('#prayer').html(log.prayer)
     }
   });
 })
@@ -566,17 +572,18 @@ const onLandingEditPage = (() => {
 // on apply changes entry click
 $('#applyChanges').click((e) => {
   e.preventDefault();
-  let updatedObj = {}  
+  let updatedObj = {}
   const token = localStorage.getItem('token');
 
   updatedObj.logTitle = $('#logTitle').val().trim();
   updatedObj.passage = $('#customText').html().trim();
   updatedObj.note = $('#note').html().trim();
+  updatedObj.prayer = $('#prayer').html().trim();
   updatedObj.references = referenceList
   updatedObj.token = token
 
   console.log(referenceList)
-  
+
   $.ajax({
     url: '/logs/' + currentID,
     type: 'PATCH',
@@ -599,7 +606,7 @@ $('#deleteEntry').click((e) => {
     $.ajax({
       url: '/logs/' + currentID,
       type: 'DELETE',
-      beforeSend: function(xhr){xhr.setRequestHeader('token', token);},
+      beforeSend: function (xhr) { xhr.setRequestHeader('token', token); },
       contentType: "application/json",
       success: (msg) => {
         window.location = '/entries';
@@ -609,7 +616,7 @@ $('#deleteEntry').click((e) => {
   }
 })
 
-$('#searchBox').keypress(function() {
+$('#searchBox').keypress(function () {
   console.log($('#searchBox').val());
   const filter = $('#searchSelect').find(":selected").val();
 
@@ -623,15 +630,15 @@ $('#goHome').click((e) => {
 
 // method to show alert box
 const showAlertMsg = ((msg, type) => {
-    const alertMsg = '<div id="successAlert" class="alert alert-warning alert-dismissible fade show" role="alert">' +
-      `<strong>${type}! </strong> ${msg}` +
-      '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-      '<span aria-hidden="true">&times;</span>' +
-      '</button></div>'
-    $('#main').append(alertMsg)
+  const alertMsg = '<div id="successAlert" class="alert alert-warning alert-dismissible fade show" role="alert">' +
+    `<strong>${type}! </strong> ${msg}` +
+    '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+    '<span aria-hidden="true">&times;</span>' +
+    '</button></div>'
+  $('#main').append(alertMsg)
 
-    $(".alert").delay(3000).slideUp(200, function () {
-      $(this).alert('close');
-    });
+  $(".alert").delay(3000).slideUp(200, function () {
+    $(this).alert('close');
+  });
 
 })
