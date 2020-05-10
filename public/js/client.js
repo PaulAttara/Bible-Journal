@@ -436,7 +436,6 @@ const displayLogs = (() => {
               return `${ref.bookId} ${ref.chapter}:${ref.verses}`
             }
           }
-
         });
 
         console.log(logs[i].references)
@@ -454,40 +453,6 @@ const displayLogs = (() => {
     .fail((xhr, status, error) => {
     });
 })
-
-$('#highlightSelected').on('click', () => {
-
-  try {
-    // console.log(window.getSelection().anchorNode)
-    // if ($(window.getSelection().anchorNode).attr('id') === '') { console.log('NOTHING SELECTED') }
-
-
-    const colorHexCode = $('#colorSelect').find('option:selected').attr('id');
-    // console.log('before:', $('#note').html());
-
-    oldTextBeforeHighlight = $('#customText').html();
-    var selection = window.getSelection();
-    // console.log(selection)
-    var range = selection.getRangeAt(0);
-    // console.log(range)
-    // const div = document.createElement("div")
-    // range.insertNode(div);
-    var newNode = document.createElement("span");
-    newNode.setAttribute("style", "background-color: " + colorHexCode + ';');
-    range.surroundContents(newNode);
-
-
-    // $('#note').append('<')
-    // console.log('after:', $('#note').html());
-
-    // clear cursor selection once text successfully highlighted
-    if (window.getSelection) { window.getSelection().removeAllRanges(); }
-    else if (document.selection) { document.selection.empty(); }
-  } catch (e) {
-    const msg = ' Only one verse can be highlighted at a time'
-    return (msg, 'Error')
-  }
-});
 
 // on view entry cell click in table
 $("table").on('click', 'button', function () {
@@ -514,24 +479,6 @@ const loadSpecificEntry = (() => {
       $('#customPrayer').html(log.prayer)
     }
   });
-})
-
-// on back to entries click
-$('#backToEntries').click((e) => {
-  e.preventDefault();
-  window.location = '/entries';
-})
-
-// on back to specific entry click
-$('#backToEntry').click((e) => {
-  e.preventDefault();
-  window.location = '/view_entry';
-})
-
-// on go to entry edit page click
-$('#goToEditEntryPage').click((e) => {
-  e.preventDefault();
-  window.location = '/edit_entry';
 })
 
 // on landing edit entry page
@@ -601,17 +548,43 @@ $('#deleteEntry').click((e) => {
   }
 })
 
-$('#searchBox').keypress(function () {
-  console.log($('#searchBox').val());
-  const filter = $('#searchSelect').find(":selected").val();
+// on back to entries click
+$('#backToEntries').click((e) => {
+  e.preventDefault();
+  window.location = '/entries';
+})
 
-});
+// on back to specific entry click
+$('#backToEntry').click((e) => {
+  e.preventDefault();
+  window.location = '/view_entry';
+})
+
+// on go to entry edit page click
+$('#goToEditEntryPage').click((e) => {
+  e.preventDefault();
+  window.location = '/edit_entry';
+})
 
 // redirect to home
 $('#goHome').click((e) => {
   e.preventDefault();
   window.location = '/home'
 })
+
+// change content of button when add prayer clicked
+$('#prayerCollapse').on('show.bs.collapse', function () {
+  $('#addPrayerBox').html('Hide Prayer Box')
+})
+$('#prayerCollapse').on('hide.bs.collapse', function () {
+  $('#addPrayerBox').html('Add Prayer')
+})
+
+$('#searchBox').keypress(function () {
+  console.log($('#searchBox').val());
+  const filter = $('#searchSelect').find(":selected").val();
+
+});
 
 // method to show alert box
 const showAlertMsg = ((msg, type) => {
@@ -627,3 +600,37 @@ const showAlertMsg = ((msg, type) => {
   });
 
 })
+
+$('#highlightSelected').on('click', () => {
+
+  try {
+    // console.log(window.getSelection().anchorNode)
+    // if ($(window.getSelection().anchorNode).attr('id') === '') { console.log('NOTHING SELECTED') }
+
+
+    const colorHexCode = $('#colorSelect').find('option:selected').attr('id');
+    // console.log('before:', $('#note').html());
+
+    oldTextBeforeHighlight = $('#customText').html();
+    var selection = window.getSelection();
+    // console.log(selection)
+    var range = selection.getRangeAt(0);
+    // console.log(range)
+    // const div = document.createElement("div")
+    // range.insertNode(div);
+    var newNode = document.createElement("span");
+    newNode.setAttribute("style", "background-color: " + colorHexCode + ';');
+    range.surroundContents(newNode);
+
+
+    // $('#note').append('<')
+    // console.log('after:', $('#note').html());
+
+    // clear cursor selection once text successfully highlighted
+    if (window.getSelection) { window.getSelection().removeAllRanges(); }
+    else if (document.selection) { document.selection.empty(); }
+  } catch (e) {
+    const msg = ' Only one verse can be highlighted at a time'
+    return (msg, 'Error')
+  }
+});
