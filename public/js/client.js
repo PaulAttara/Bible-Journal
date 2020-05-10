@@ -83,7 +83,7 @@ function storeName() {
     function () {
       nameUser = gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile()
       console.log(nameUser.Ad)
-      $('#title').html('<h1>Hey ' + nameUser.Ad + '!</h1>')
+      $('#title').html('<h2>Welcome ' + nameUser.Ad + '!</h2>')
     }, 1000);
 }
 

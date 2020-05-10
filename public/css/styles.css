@@ -106,14 +106,14 @@ h2 {
 }
 
 #logTitle {
-  height: 50px;
+  height: 40px;
   box-shadow: none; 
   border-top: none;
   border-left: none;
   border-right: none;
   margin-bottom: 5px;
   font-weight: bold;
-  font-size: 20px;
+  font-size: 18px;
 }
 
 textarea {
@@ -224,6 +224,7 @@ label {
   /* vertical-align:middle;  */
   /* display:table-cell; */
   line-height:38px;
+  font-size: 20px;
 }
 /* 
 input {
