@@ -1,25 +1,15 @@
 let referenceList = [];
 let currentID = '';
 let oldTextBeforeHighlight = ''
-var nameUser
+var nameUser = ''
 
 // on any page load
 $(window).on('load', function () {
 
-  // on login page load
-  if (top.location.pathname === '/') {
-
-  }
   // on home page load
   if (top.location.pathname === '/home') {
-    // auth2 = gapi.auth2.init();
-    console.log(nameUser)
-    let name = gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile()
+    storeName()
     getVerseOfDay();
-
-    // console.log(nameUser)
-    $('#title').html('<h2>Hey ' + name + '</h2>')
-    $('#title2').append('<h2>Hey ' + name + '</h2>')
   }
 
   // on new entries page load
@@ -38,10 +28,6 @@ $(window).on('load', function () {
 
   // on entries page load
   if (top.location.pathname === '/entries') {
-    // if(localStorage.getItem('ID')){
-    //   currentID = localStorage.getItem('ID')
-    //   return loadSpecificEntry();
-    // }
     displayLogs();
   }
 
@@ -51,7 +37,13 @@ $(window).on('load', function () {
     onLandingEditPage();
   }
 
+  // on view entry entries page load
+  if (top.location.pathname === '/view_entry') {
+    currentID = localStorage.getItem('ID')
+    loadSpecificEntry();
+  }
 })
+
 
 // on testing sign in click
 $('#signIn').click(async (e) => {
@@ -60,18 +52,10 @@ $('#signIn').click(async (e) => {
   window.location = '/home';
 })
 
-
 function onSignIn(googleUser) {
   console.log('entered client sign in function')
-  // var profile = googleUser.getBasicProfile();
-  // console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead. // use this to identify user
   // console.log('Image URL: ' + profile.getImageUrl());
   auth2 = gapi.auth2.init();
-
-  // if (auth2.isSignedIn.get()) {
-  // var profile = auth2.currentUser.get().getBasicProfile();
-  // console.log('ID: ' + profile.getId());
-  // }
 
   var id_token = googleUser.getAuthResponse().id_token;
   localStorage.setItem('token', id_token);
@@ -94,6 +78,15 @@ function onSignIn(googleUser) {
   });
 }
 
+function storeName() {
+  setTimeout(
+    function () {
+      nameUser = gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile()
+      console.log(nameUser.Ad)
+      $('#title').html('<h1>Hey ' + nameUser.Ad + '!</h1>')
+    }, 1000);
+}
+
 function onLoad() {
   gapi.load('auth2', function () {
     gapi.auth2.init();
@@ -108,7 +101,7 @@ function signOut() {
     });
   }
   catch (e) {
-    onLoad()
+    // onLoad()
   }
   $.ajax({
     url: '/signout/',
@@ -416,8 +409,6 @@ $('#addToCollection').click((e) => {
 const displayLogs = (() => {
   const token = localStorage.getItem('token')
 
-  console.log('test')
-
   $.ajax({
     url: '/logs/',
     type: 'GET',
@@ -502,7 +493,7 @@ $('#highlightSelected').on('click', () => {
 $("table").on('click', 'button', function () {
   currentID = this.id;
   localStorage.setItem('ID', currentID);
-  loadSpecificEntry();
+  window.location = '/view_entry';
 })
 
 const loadSpecificEntry = (() => {
@@ -513,7 +504,6 @@ const loadSpecificEntry = (() => {
     beforeSend: function (xhr) { xhr.setRequestHeader('token', token); },
 
     success: (log) => {
-      $('#tableDiv').hide();
       $('#logTitle').text(log.logTitle);
       const newDateTxt = moment(log.date.substring(0, 10)).format('dddd MMMM D Y')
       $('#dateLabel').text(newDateTxt);
@@ -522,8 +512,6 @@ const loadSpecificEntry = (() => {
       $('#passageText').html(log.passage);
       $('#customNote').html(log.note)
       $('#customPrayer').html(log.prayer)
-      window.scrollTo(0, 0);
-      $('#specificLog').show();
     }
   });
 })
@@ -531,16 +519,13 @@ const loadSpecificEntry = (() => {
 // on back to entries click
 $('#backToEntries').click((e) => {
   e.preventDefault();
-  if (top.location.pathname === '/edit_entry') {
-    window.location = '/entries';
-  }
-  if (top.location.pathname === '/entries') {
-    localStorage.removeItem('ID');
-  }
-  $('#tableDiv').show();
-  displayLogs();
-  $('#specificLog').hide();
-  $('#passageText').empty();
+  window.location = '/entries';
+})
+
+// on back to specific entry click
+$('#backToEntry').click((e) => {
+  e.preventDefault();
+  window.location = '/view_entry';
 })
 
 // on go to entry edit page click

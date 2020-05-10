@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 app.use(journalLogRouter)
 app.use(userRouter)
 app.use(bibleapi)
-app.use(express.static('public')); 
+app.use(express.static('public'));
 
 const path = require('path');
 const port = process.env.PORT || 3000
@@ -34,6 +34,10 @@ app.get('/entries', https, nocache, auth, function (req, res) {
     res.sendFile(path.resolve('public', 'html', 'entries.html'))
 });
 
+app.get('/view_entry', https, nocache, auth, function (req, res) {
+    res.sendFile(path.resolve('public', 'html', 'view_entry.html'))
+});
+
 app.get('/new_entry', https, nocache, auth, function (req, res) {
     res.sendFile(path.resolve('public', 'html', 'new_entry.html'))
 });
@@ -43,9 +47,9 @@ app.get('/edit_entry', https, nocache, auth, function (req, res) {
 });
 
 // handle any errors thrown in middleware authentication
-app.use(function(err,req,res,next) {
+app.use(function (err, req, res, next) {
     res.redirect('/');
-  });
+});
 
 // handle any other request
 app.get('*', (req, res) => {
