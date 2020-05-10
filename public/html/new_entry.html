@@ -111,8 +111,12 @@
 
             <div id="note" class="contentEdit" contenteditable="true" rows="6" spellcheck="false" data-text="Write your custom journal entry here"></div>
 
-            <label><b>Prayer: </b></label>
-            <div id="prayer" class="contentEdit" contenteditable="true" rows="6" spellcheck="false" data-text="Write a prayer here (optional)"></div>
+            <button id="addPrayerBox" href="#prayerCollapse" type="button" data-toggle="collapse" class="btn btn-primary btn-lg">Add
+                Prayer</button>
+            <div id="prayerCollapse" class="collapse">
+                <label><b>Prayer: </b></label>
+                <div id="prayer" class="contentEdit" contenteditable="true" rows="6" spellcheck="false" data-text="Write a prayer here (optional)"></div>
+            </div>
 
             <button id="addToCollection" type="button" class="btn btn-primary btn-lg">Add to Collection</button>
 
