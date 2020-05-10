@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="google-signin-client_id" content="56717737385-c7o2o1q38jdli4q9mqoh4rn8krfoqel7.apps.googleusercontent.com">
     <link rel="icon" href="/images/logo.png">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+        crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="css/styles.css">
     <title>Bible Journal App</title>
 
@@ -30,7 +30,7 @@
                     <a class="nav-link" href="/entries">Entries</a>
                 </li>
                 <li class="nav-item">
-                        <a href="#" class="nav-link" onclick="signOut();">Sign out</a>
+                    <a href="#" class="nav-link" onclick="signOut();">Sign out</a>
                 </li>
             </ul>
         </div>
@@ -59,7 +59,7 @@
                     <datalist id="bookSelect">
                         <option value="Something"></option>
                     </datalist> -->
-            
+
                 </div>
                 <div class="col-xs-6"><select id="chapterSelect" class="form-control"></select></div>
                 <div class="col-xs-1"><label>&nbsp; : &nbsp; </label></div>
@@ -80,51 +80,49 @@
             </div>
 
             <label><b>Passages:</b></label>
-            <div id="customText" class="contentEdit" contenteditable="true" spellcheck="false"
-                data-text="You can add/edit multiple passages here"></div>
-            
+            <div id="customText" class="contentEdit" contenteditable="true" spellcheck="false" data-text="You can add/edit multiple passages here"></div>
+
             <label><b>References: </b><br /></label>
             <div id="referencesDiv"></div>
 
             <label><b>Annotate: </b><br /></label>
 
             <div class="row">
-                    <div class="col-xs-4">
-                        <select id="colorSelect" class="form-control" selected>
-                            <option id="#E6FF33">Yellow</option>
-                            <option id="pink">Pink</option>
-                            <option id="red">Red</option>
-                            <option id="#80FF33">Green</option>
-                            <option id="orange">Orange</option>
-                            <option id="#007bff">Blue</option>
-                        </select>
-                    </div>
-                    <div class="col-xs-4">
-                        <button id="highlightSelected" type="button" class="btn btn-primary btn-lg">Highlight</button>
-                    </div>
-    
-                    <!-- <div class="col-xs-4">
-                        <button id="undoHighlight" type="button" class="btn btn-primary btn-lg">Undo</button>
-                    </div> -->
+                <div class="col-xs-4">
+                    <select id="colorSelect" class="form-control" selected>
+                        <option id="#E6FF33">Yellow</option>
+                        <option id="pink">Pink</option>
+                        <option id="red">Red</option>
+                        <option id="#80FF33">Green</option>
+                        <option id="orange">Orange</option>
+                        <option id="#007bff">Blue</option>
+                    </select>
+                </div>
+                <div class="col-xs-4">
+                    <button id="highlightSelected" type="button" class="btn btn-primary btn-lg">Highlight</button>
                 </div>
 
+                <!-- <div class="col-xs-4">
+                        <button id="undoHighlight" type="button" class="btn btn-primary btn-lg">Undo</button>
+                    </div> -->
+            </div>
+
             <label><b>Note: </b></label>
-            <!-- <textarea id="note" class="form-control" rows="6" spellcheck="false"
-                placeholder="Write your custom journal entry here"></textarea> -->
+
             <div id="note" class="contentEdit" contenteditable="true" rows="6" spellcheck="false" data-text="Write your custom journal entry here"></div>
 
+            <label><b>Prayer: </b></label>
+            <div id="prayer" class="contentEdit" contenteditable="true" rows="6" spellcheck="false" data-text="Write a prayer here (optional)"></div>
+
             <button id="addToCollection" type="button" class="btn btn-primary btn-lg">Add to Collection</button>
-            <!-- <button id="displayLogs" type="button" class="btn btn-primary btn-lg">Show Logs</button>
-            <table class="table table-bordered table-hover table-condensed" id="logsList"></table> -->
+
         </div>
     </div>
     </div>
     <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
         crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
     <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
     <script type="text/javascript" src="js/client.js"></script>
