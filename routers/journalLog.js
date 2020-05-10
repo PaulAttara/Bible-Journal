@@ -28,18 +28,18 @@ router.post("/logs", auth, async (req, res) => {
 // get list of all logs
 router.get("/logs", auth, async (req, res) => {
   try {
-    console.log(req.user);
-    user = req.user;
-    await user
-      .populate({
-        path: "journalLogs"
-      })
-      .execPopulate();
+    // console.log(req.user);
+    // user = req.user;
+    // await user
+    //   .populate({
+    //     path: "journalLogs"
+    //   })
+    //   .execPopulate();
 
-    res.status(200).send(user.journalLogs);
+    const logs = await JournalLog.find({ owner: req.user }).sort({ date: 'desc' });
+    // res.status(200).send(user.journalLogs);
+    res.status(200).send(logs);
 
-    // const logs = await JournalLog.find()
-    // res.status(200).send(logs)
   } catch (e) {
     res.status(400).send(e.message);
   }
